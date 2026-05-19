@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Resort Room Management</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+
+<div class="container">
+    <h1>Resort Room Management</h1>
+
+    <a href="/rooms/add" class="btn">Add New Room</a>
+
+    <table>
+        <tr>
+            <th>Room No</th>
+            <th>Type</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+
+        <tr th:each="room : ${rooms}">
+            <td th:text="${room.roomNumber}"></td>
+            <td th:text="${room.roomType}"></td>
+            <td th:text="${room.price}"></td>
+            <td th:text="${room.status}"></td>
+            <td>
+                <a th:href="@{/rooms/edit/{id}(id=${room.id})}" class="edit">Edit</a>
+                <a th:href="@{/rooms/delete/{id}(id=${room.id})}" class="delete">Delete</a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

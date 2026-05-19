@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Room - Resort</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+
+<div class="form-container">
+    <h1>Add / Edit Resort Room</h1>
+
+    <form th:action="@{/rooms/save}" th:object="${room}" method="post">
+
+        <input type="hidden" th:field="*{id}">
+
+        <label>Room Number</label>
+        <input type="text" th:field="*{roomNumber}" placeholder="Enter room number" required>
+
+        <label>Room Type</label>
+        <input type="text" th:field="*{roomType}" placeholder="Deluxe / Premium / Suite" required>
+
+        <label>Price</label>
+        <input type="number" th:field="*{price}" placeholder="Enter price" required>
+
+        <label>Status</label>
+        <select th:field="*{status}">
+            <option value="Available">Available</option>
+            <option value="Booked">Booked</option>
+            <option value="Maintenance">Maintenance</option>
+        </select>
+
+        <label>Image URL</label>
+        <input type="text" th:field="*{imageUrl}" placeholder="Enter image URL">
+
+        <button type="submit">Save Room</button>
+    </form>
+</div>
+
+</body>
+</html>
