@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <title>Order From Menu</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+</head>
+
+<body class="dashboard-body">
+
+<div class="sidebar">
+
+    <h2>Pariwar</h2>
+
+    <a href="/dashboard">Dashboard</a>
+    <a href="/restaurant/order">Order Food</a>
+    <a href="/restaurant">Restaurant</a>
+    <a href="/bookings">Bookings</a>
+    <a href="/services">Services</a>
+    <a href="/checkin" sec:authorize="hasAnyRole('ADMIN','WAITER')">Check-In</a>
+    <a href="/ai">AI Assistant</a>
+    <a href="/logout" class="logout-btn">Logout</a>
+
+    <div th:if="${isAdmin}">
+        <hr class="sidebar-divider">
+        <a href="/admin/restaurant">Admin Orders</a>
+        <a href="/admin/menu">Menu Management</a>
+    </div>
+
+</div>
+
+<div class="main-content">
+
+    <div class="topbar">
+        <div>
+            <h1>Restaurant Menu</h1>
+            <p>Choose from the curated menu and place your food order instantly.</p>
+        </div>
+    </div>
+
+    <div class="table-preview">
+        <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1200&auto=format&fit=crop" alt="Table Preview">
+        <div>
+            <h3>Table View</h3>
+            <p>Choose your table and get a seamless dining experience. Your food bill updates automatically after ordering.</p>
+        </div>
+    </div>
+
+    <div class="card-grid">
+        <div class="menu-card" th:each="item : ${menuItems}">
+            <img th:if="${item.imageUrl}" th:src="${item.imageUrl}" alt="Menu image" />
+            <h2 th:text="${item.itemName}">Item</h2>
+            <p th:text="${item.description}">Description</p>
+            <div class="menu-price" th:text="${'₹' + item.price}">Price</div>
+            <span class="status-tag" th:text="${item.status}">Available</span>
+        </div>
+    </div>
+
+    <div class="form-box order-form-box">
+        <h1>Place an Order</h1>
+        <form th:action="@{/restaurant/save}" th:object="${restaurantOrder}" method="post">
+            <input type="text" th:field="*{customerName}" placeholder="Customer Name" required>
+            <select name="menuItemId" required>
+                <option value="" disabled selected>Select Menu Item</option>
+                <option th:each="item : ${menuItems}"
+                        th:value="${item.id}"
+                        th:text="${item.itemName + ' - ₹' + item.price}">
+                </option>
+            </select>
+            <input type="number" th:field="*{quantity}" min="1" th:value="1" placeholder="Quantity" required>
+            <input type="text" th:field="*{tableNumber}" placeholder="Table Number" required>
+            <div th:if="${isAdmin or isWaiter}">
+                <select th:field="*{status}">
+                    <option value="Pending">Pending</option>
+                    <option value="Preparing">Preparing</option>
+                    <option value="Served">Served</option>
+                </select>
+            </div>
+            <div th:if="${isCustomer}">
+                <input type="hidden" th:field="*{status}" value="Pending" />
+            </div>
+            <button type="submit">Submit Order</button>
+        </form>
+    </div>
+
+    <div th:if="${isAdmin} or ${isWaiter}" class="dashboard-card" style="margin-top:30px;">
+        <h2>Active Restaurant Orders</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Guest</th>
+                <th>Food Item</th>
+                <th>Qty</th>
+                <th>Table</th>
+                <th>Status</th>
+                <th>Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order : ${orders}">
+                <td th:text="${order.customerName}"></td>
+                <td th:text="${order.foodItem}"></td>
+                <td th:text="${order.quantity}"></td>
+                <td th:text="${order.tableNumber}"></td>
+                <td th:text="${order.status}"></td>
+                <td th:text="${order.totalPrice != null ? '₹' + order.totalPrice : '₹0'}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>

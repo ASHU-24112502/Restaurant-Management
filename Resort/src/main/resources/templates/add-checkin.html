@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <title>Add Check-In</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body class="dashboard-body">
+
+<div class="sidebar">
+    <h2>Pariwar</h2>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/rooms">Rooms</a>
+    <a href="/bookings">Bookings</a>
+    <a href="/restaurant">Restaurant</a>
+    <a href="/checkin" sec:authorize="hasAnyRole('ADMIN','WAITER')">Check-In</a>
+    <a href="/services">Services</a>
+    <a href="/ai">AI Assistant</a>
+</div>
+
+<div class="main-content">
+    <div class="topbar">
+        <h1>Add Check-In</h1>
+    </div>
+
+    <div class="form-box">
+        <form th:action="@{/checkin/save}" th:object="${checkin}" method="post" th:if="${isAdmin or isWaiter}">
+            <input type="text" th:field="*{guestName}" placeholder="Guest Name" required>
+            <input type="text" th:field="*{roomNumber}" placeholder="Room Number" required>
+            <label>Check-In Date</label>
+            <input type="date" th:field="*{checkInDate}" required>
+            <input type="text" th:field="*{status}" placeholder="Status" value="Checked In" required>
+            <button type="submit">Save Check-In</button>
+        </form>
+        <div th:if="${!(isAdmin or isWaiter)}">
+            <p>You do not have permission to perform check-ins.</p>
+        </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

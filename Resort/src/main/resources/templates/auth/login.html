@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Resort Login</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body class="auth-body">
+
+<div class="auth-wrapper">
+
+    <div class="auth-left">
+        <div class="overlay"></div>
+
+        <div class="auth-content">
+            <h1>Pariwar</h1>
+            <p>
+                Experience comfort, luxury, and digital resort services
+                with our smart management system.
+            </p>
+        </div>
+    </div>
+
+    <div class="auth-right">
+
+        <form method="post" action="/login" class="auth-form">
+
+            <h2>Welcome Back</h2>
+            <p class="sub-text">Login to continue</p>
+
+            <div th:if="${param.error}">
+                <div class="error-box">
+                    <p th:switch="${param.cause}">
+                        <span th:case="'username'">No account found with that email address.</span>
+                        <span th:case="'password'">Incorrect password. Please try again.</span>
+                        <span th:case="*">Authentication failed due to a system issue. Please try later.</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="input-box">
+                <i class="fa-solid fa-envelope"></i>
+                <input type="email"
+                       name="username"
+                       placeholder="Enter Email"
+                       required>
+            </div>
+
+            <div class="input-box" style="position:relative;">
+                <i class="fa-solid fa-lock"></i>
+                <input id="passwordField" type="password"
+                       name="password"
+                       placeholder="Enter Password"
+                       required>
+                <button type="button" id="togglePassword" class="toggle-password"
+                        style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#6b7280;cursor:pointer;">
+                    <i class="fa-regular fa-eye" id="toggleIcon"></i>
+                </button>
+            </div>
+
+            <button type="submit" class="auth-btn">
+                Login
+            </button>
+
+            <p class="bottom-text">
+                Don't have an account?
+                <a href="/register">Register</a>
+            </p>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+    (function(){
+        const email = document.querySelector('input[name="username"]');
+        const pwd = document.querySelector('input[name="password"]');
+        if(email) email.focus();
+        /* clear password on auth error to avoid reuse */
+        /*[[${param.error}]]*/
+        /* use Thymeleaf conditional to clear*/
+        /* th:if cannot be used inside JS easily so use string replacement */
+    })();
+/*]]>*/
+</script>
+
+<script>
+    (function(){
+        const pwdField = document.getElementById('passwordField');
+        const toggle = document.getElementById('togglePassword');
+        const icon = document.getElementById('toggleIcon');
+        if(!pwdField || !toggle) return;
+        toggle.addEventListener('click', function(){
+            const isPwd = pwdField.type === 'password';
+            pwdField.type = isPwd ? 'text' : 'password';
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+        });
+    })();
+</script>
+
+</body>
+</html>

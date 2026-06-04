@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <title>Bookings</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/style.css}">
+
+</head>
+
+<body class="dashboard-body">
+
+<div class="sidebar">
+
+    <h2>Pariwar</h2>
+
+    <a href="/dashboard">Dashboard</a>
+    <a href="/rooms">Rooms</a>
+    <a href="/restaurant">Restaurant</a>
+    <a href="/services">Services</a>
+    <a href="/bookings">Bookings</a>
+
+</div>
+
+<div class="main-content">
+
+    <div class="topbar">
+
+        <h1>Room Bookings</h1>
+
+        <a href="/bookings/add"
+           class="add-btn">
+            New Booking
+        </a>
+
+    </div>
+
+    <table>
+
+        <thead>
+
+        <tr>
+
+            <th>ID</th>
+            <th>Customer</th>
+            <th>Room</th>
+            <th>Check-In</th>
+            <th>Check-Out</th>
+            <th>Status</th>
+            <th>Payment</th>
+            <th>Total</th>
+            <th>Action</th>
+
+        </tr>
+
+        </thead>
+
+        <tbody>
+
+        <tr th:each="booking : ${bookings}">
+
+            <td th:text="${booking.id}"></td>
+
+            <td th:text="${booking.customerName}"></td>
+
+            <td th:text="${booking.roomNumber}"></td>
+
+            <td th:text="${booking.checkInDate}"></td>
+
+            <td th:text="${booking.checkOutDate}"></td>
+
+            <td th:text="${booking.bookingStatus}"></td>
+
+            <td th:text="${booking.paymentStatus}"></td>
+
+            <td th:text="${booking.totalPrice}"></td>
+
+            <td>
+                <a th:if="${isAdmin or isWaiter}" th:href="@{/bookings/delete/{id}(id=${booking.id})}">Delete</a>
+            </td>
+
+        </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</body>
+</html>

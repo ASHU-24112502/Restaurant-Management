@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <title>Services</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body class="dashboard-body">
+
+<div class="sidebar">
+
+    <h2>Pariwar</h2>
+
+    <a href="/dashboard">Dashboard</a>
+    <a href="/rooms">Rooms</a>
+    <a href="/bookings">Bookings</a>
+    <a href="/admin/restaurant">Restaurant Orders</a>
+    <a href="/admin/menu">Menu</a>
+    <a href="/admin/billing/rooms">Room Billing</a>
+    <a href="/admin/billing/restaurant">Restaurant Billing</a>
+    <a href="/checkin" sec:authorize="hasAnyRole('ADMIN','WAITER')">Check-In</a>
+    <a href="/services">Services</a>
+    <a href="/ai">AI Assistant</a>
+
+</div>
+
+<div class="main-content">
+
+    <div class="topbar">
+        <h1>Guest Services</h1>
+    </div>
+
+    <div class="cards">
+
+        <div class="dashboard-card">
+            <h2>Laundry</h2>
+            <p>Monitor laundry service requests.</p>
+        </div>
+
+        <div class="dashboard-card">
+            <h2>Housekeeping</h2>
+            <p>Track cleaning and maintenance requests.</p>
+        </div>
+
+        <div class="dashboard-card">
+            <h2>Complaints</h2>
+            <p>Handle customer complaints efficiently.</p>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

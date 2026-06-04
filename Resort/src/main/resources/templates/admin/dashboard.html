@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <title>Dashboard</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            font-family:Arial, sans-serif;
+            background:#f4f6f9;
+            display:flex;
+        }
+
+        .sidebar{
+            width:250px;
+            height:100vh;
+            background:#111827;
+            color:white;
+            padding:25px 20px;
+            position:fixed;
+        }
+
+        .sidebar h2{
+            margin-bottom:40px;
+            text-align:center;
+            font-size:28px;
+        }
+
+        .sidebar a{
+            display:block;
+            color:white;
+            text-decoration:none;
+            padding:14px;
+            margin-bottom:12px;
+            border-radius:8px;
+            transition:0.3s;
+            font-size:17px;
+        }
+
+        .sidebar a:hover{
+            background:#2563eb;
+        }
+
+        .logout-btn{
+            background:#dc2626;
+            margin-top:30px;
+            text-align:center;
+        }
+
+        .logout-btn:hover{
+            background:#b91c1c !important;
+        }
+
+        .main-content{
+            margin-left:250px;
+            width:100%;
+            padding:30px;
+        }
+
+        .topbar{
+            margin-bottom:30px;
+        }
+
+        .topbar h1{
+            font-size:36px;
+            color:#111827;
+        }
+
+        .analytics{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+            gap:20px;
+            margin-bottom:40px;
+        }
+
+        .analytics-card{
+            background:white;
+            padding:25px;
+            border-radius:12px;
+            box-shadow:0 4px 12px rgba(0,0,0,0.08);
+            text-align:center;
+        }
+
+        .analytics-card h2{
+            font-size:40px;
+            color:#2563eb;
+            margin-bottom:10px;
+        }
+
+        .analytics-card p{
+            font-size:18px;
+            color:#555;
+        }
+
+        .cards{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+            gap:25px;
+        }
+
+        .dashboard-card{
+            background:white;
+            padding:30px;
+            border-radius:12px;
+            box-shadow:0 4px 12px rgba(0,0,0,0.08);
+            transition:0.3s;
+        }
+
+        .dashboard-card:hover{
+            transform:translateY(-5px);
+        }
+
+        .dashboard-card h2{
+            margin-bottom:15px;
+            color:#111827;
+        }
+
+        .dashboard-card p{
+            color:#666;
+            margin-bottom:25px;
+            line-height:1.5;
+        }
+
+        .dashboard-card a{
+            display:inline-block;
+            text-decoration:none;
+            background:#2563eb;
+            color:white;
+            padding:12px 20px;
+            border-radius:8px;
+            transition:0.3s;
+        }
+
+        .dashboard-card a:hover{
+            background:#1d4ed8;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+    <h2>Pariwar</h2>
+
+    <a href="/dashboard">Dashboard</a>
+    <a href="/restaurant/order">Order Food</a>
+    <a href="/restaurant">Restaurant</a>
+    <a href="/bookings">Bookings</a>
+    <a href="/services">Services</a>
+    <a href="/checkin" sec:authorize="hasAnyRole('ADMIN','WAITER')">Check-In</a>
+    <a href="/ai">AI Assistant</a>
+
+    <div th:if="${isAdmin}">
+        <hr class="sidebar-divider">
+        <a href="/rooms">Manage Rooms</a>
+        <a href="/admin/restaurant">Admin Orders</a>
+        <a href="/admin/menu">Menu</a>
+        <a href="/admin/users">Users</a>
+        <a href="/admin/partners">Partners</a>
+        <a href="/admin/billing/rooms">Room Billing</a>
+        <a href="/admin/billing/restaurant">Restaurant Billing</a>
+    </div>
+
+    <a href="/logout" class="logout-btn">
+        Logout
+    </a>
+
+</div>
+
+<div class="main-content">
+
+    <div class="topbar">
+        <div>
+            <h1 th:text="${ isAdmin ? 'Admin Dashboard' : (isWaiter ? 'Waiter Dashboard' : 'Guest Dashboard') }">Dashboard</h1>
+            <p style="color:#475569;margin-top:8px;max-width:750px;" th:if="${isAdmin}">Welcome back, admin. Use the controls below to manage rooms, orders, users, partners, and billing.</p>
+            <p style="color:#475569;margin-top:8px;max-width:750px;" th:if="${isWaiter}">Welcome back, waiter. Preview active orders, update table status, and keep service requests flowing.</p>
+            <p style="color:#475569;margin-top:8px;max-width:750px;" th:if="${isCustomer}">Welcome back. Use the dashboard to order food, manage bookings, request services, and view your bills.</p>
+        </div>
+        <div class="dashboard-summary">
+            <span>Role: <strong th:text="${ isAdmin ? 'Admin' : (isWaiter ? 'Waiter' : 'Customer') }">Role</strong></span>
+            <span th:if="${isAdmin}">Total Revenue: <strong th:text="'₹' + totalRevenue">₹0</strong></span>
+        </div>
+    </div>
+
+    <div th:if="${isAdmin}" class="analytics">
+
+        <div class="analytics-card">
+            <h2 th:text="${totalRooms}">0</h2>
+            <p>Total Rooms</p>
+        </div>
+
+        <div class="analytics-card">
+            <h2 th:text="${availableRooms}">0</h2>
+            <p>Available Rooms</p>
+        </div>
+
+        <div class="analytics-card">
+            <h2 th:text="${occupiedRooms}">0</h2>
+            <p>Occupied Rooms</p>
+        </div>
+
+        <div class="analytics-card">
+            <h2 th:text="${totalBookings}">0</h2>
+            <p>Total Bookings</p>
+        </div>
+
+        <div class="analytics-card">
+            <h2 th:text="${paidRoomBookings}">0</h2>
+            <p>Paid Room Bookings</p>
+        </div>
+
+        <div class="analytics-card">
+            <h2 th:text="${totalOrders}">0</h2>
+            <p>Restaurant Orders</p>
+        </div>
+
+        <div class="analytics-card">
+            <h2 th:text="${paidRestaurantOrders}">0</h2>
+            <p>Paid Restaurant Orders</p>
+        </div>
+
+        <div class="analytics-card">
+            <h2 th:text="${totalServices}">0</h2>
+            <p>Service Requests</p>
+        </div>
+
+        <div class="analytics-card">
+            <h2 th:text="${totalCheckins}">0</h2>
+            <p>Total Check-Ins</p>
+        </div>
+
+        <div class="analytics-card">
+            <h2 th:text="${employeeCount}">0</h2>
+            <p>Employees</p>
+        </div>
+
+        <div class="analytics-card">
+            <h2 th:text="${waiterCount}">0</h2>
+            <p>Waiters</p>
+        </div>
+
+        <div class="analytics-card">
+            <h2 th:text="${customerCount}">0</h2>
+            <p>Customers</p>
+        </div>
+
+        <div class="analytics-card">
+            <h2 th:text="${totalRevenue}">0</h2>
+            <p>Total Revenue</p>
+        </div>
+
+    </div>
+
+    <div th:if="${isWaiter}" class="analytics">
+
+        <div class="analytics-card">
+            <h2>Pending Orders</h2>
+            <p>See live tickets from customers and update meal status quickly.</p>
+        </div>
+
+        <div class="analytics-card">
+            <h2>Service Requests</h2>
+            <p>Manage guest service needs and coordinate with housekeeping.</p>
+        </div>
+
+        <div class="analytics-card">
+            <h2>Table Support</h2>
+            <p>Assist customers with seating, food choices, and payment options.</p>
+        </div>
+
+    </div>
+
+    <div th:if="${isCustomer}" class="analytics">
+
+        <div class="analytics-card">
+            <h2>Order Food</h2>
+            <p>Open the restaurant menu and submit your order quickly.</p>
+        </div>
+
+        <div class="analytics-card">
+            <h2>Request Services</h2>
+            <p>Submit housekeeping, laundry, or guest support requests.</p>
+        </div>
+
+        <div class="analytics-card">
+            <h2>My Bookings</h2>
+            <p>Check your room bookings and stay details.</p>
+        </div>
+
+    </div>
+
+    <!-- MANAGEMENT SECTION -->
+
+    <div class="cards">
+
+        <div th:if="${isAdmin}" class="dashboard-card">
+
+            <h2>Rooms</h2>
+
+            <p>
+                Manage all available rooms,
+                pricing, status, and inventory.
+            </p>
+
+            <a href="/rooms">Open</a>
+
+        </div>
+
+        <div class="dashboard-card">
+
+            <h2>Bookings</h2>
+
+            <p>
+                Monitor customer reservations,
+                schedules, and confirmations.
+            </p>
+
+            <a href="/bookings">Open</a>
+
+        </div>
+
+        <div class="dashboard-card">
+
+            <h2>Restaurant</h2>
+
+            <p>
+                Order food, view the menu, and pay your bill from one place.
+            </p>
+
+            <a href="/restaurant/order">Open</a>
+
+        </div>
+
+        <div class="dashboard-card">
+
+            <h2>Check-In</h2>
+
+            <p>
+                Track guest arrivals,
+                departures, and room allocation.
+            </p>
+
+            <a href="/checkin">Open</a>
+
+        </div>
+
+        <div class="dashboard-card">
+
+            <h2>Services</h2>
+
+            <p>
+                Manage housekeeping,
+                laundry, and guest support requests.
+            </p>
+
+            <a href="/services">Open</a>
+
+        </div>
+
+        <div class="dashboard-card">
+
+            <h2>AI Assistant</h2>
+
+            <p>
+                Use Groq AI assistant for
+                smart resort recommendations.
+            </p>
+
+            <a href="/ai">Open</a>
+
+        </div>
+
+        <div th:if="${isAdmin}" class="dashboard-card">
+
+            <h2>Admin Tools</h2>
+
+            <p>
+                Edit rooms, manage menus, and review billing from the admin console.
+            </p>
+
+            <a href="/rooms">Open</a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</body>
+
+</html>

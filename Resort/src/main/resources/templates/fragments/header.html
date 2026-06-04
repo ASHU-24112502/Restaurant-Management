@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<div th:fragment="header" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="brand" href="/">Pariwar</a>
+            <nav class="main-nav">
+                <a href="/rooms">Rooms</a>
+                <a href="/bookings">Bookings</a>
+                <a href="/admin/restaurant">Restaurant</a>
+                <a href="/services">Services</a>
+                <a href="/ai">AI</a>
+                <a href="/checkin" sec:authorize="hasAnyRole('ADMIN','WAITER')">Check-In</a>
+            </nav>
+            <div class="header-actions">
+                <a href="/login" class="btn small">Login</a>
+            </div>
+        </div>
+    </header>
+</div>
+

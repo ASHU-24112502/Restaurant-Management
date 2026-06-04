@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <title>Digital Check-In</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body class="dashboard-body">
+
+<div class="sidebar">
+
+    <h2>Pariwar</h2>
+
+    <a href="/dashboard">Dashboard</a>
+    <a href="/checkin" sec:authorize="hasAnyRole('ADMIN','WAITER')">Check-In</a>
+
+</div>
+
+<div class="main-content">
+
+    <div class="topbar">
+        <h1>Digital Check-In</h1>
+    </div>
+
+    <div class="dashboard-card">
+
+        <h2>Guest Approval System</h2>
+
+        <p>
+            Guests can request room check-in and admin
+            can approve requests digitally.
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>

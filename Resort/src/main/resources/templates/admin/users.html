@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Management</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="dashboard-body">
+<div class="sidebar">
+    <h2>Pariwar</h2>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/rooms">Rooms</a>
+    <a href="/admin/restaurant">Restaurant Orders</a>
+    <a href="/admin/menu">Menu</a>
+    <a href="/admin/users">Users</a>
+    <a href="/admin/partners">Partners</a>
+    <a href="/admin/billing/rooms">Room Billing</a>
+    <a href="/admin/billing/restaurant">Restaurant Billing</a>
+</div>
+<div class="main-content">
+    <div class="topbar">
+        <h1>User Management</h1>
+        <a href="/admin/users/add" class="dashboard-btn">Add User</a>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.fullName}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.role}"></td>
+            <td>
+                <a th:href="@{/admin/users/edit/{id}(id=${user.id})}">Edit</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
+

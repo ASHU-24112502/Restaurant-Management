@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Restaurant Billing</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="dashboard-body">
+<div class="sidebar">
+    <h2>Pariwar</h2>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/restaurant">Restaurant</a>
+    <a href="/admin/billing/restaurant">Restaurant Billing</a>
+    <a href="/admin/billing/rooms">Room Billing</a>
+</div>
+<div class="main-content">
+    <div class="topbar">
+        <h1>Restaurant Billing</h1>
+    </div>
+    <div class="dashboard-card" style="margin-bottom:20px;">
+        <p>Admin and waiter actions:
+            <strong>Pay with Razorpay</strong> opens the checkout page for unpaid restaurant bills,
+            and <strong>Mark Paid</strong> updates the order payment status immediately.
+        </p>
+    </div>
+    <div class="cards">
+        <div class="dashboard-card">
+            <h2 th:text="${totalRevenue}">0.0</h2>
+            <p>Total Table Revenue</p>
+        </div>
+        <div class="dashboard-card">
+            <h2 th:text="${paidCount}">0</h2>
+            <p>Paid Orders</p>
+        </div>
+        <div class="dashboard-card">
+            <h2 th:text="${pendingCount}">0</h2>
+            <p>Pending Orders</p>
+        </div>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Customer</th>
+            <th>Food Item</th>
+            <th>Qty</th>
+            <th>Table</th>
+            <th>Status</th>
+            <th>Total</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.id}"></td>
+            <td th:text="${order.customerName}"></td>
+            <td th:text="${order.foodItem}"></td>
+            <td th:text="${order.quantity}"></td>
+            <td th:text="${order.tableNumber}"></td>
+            <td th:text="${order.status}"></td>
+            <td th:text="${order.totalPrice}"></td>
+            <td>
+                <span th:if="${isAdmin or isWaiter}">
+                    <a th:if="${order.status != 'Paid'}" th:href="@{/payment/checkout(type='restaurant', refId=${order.id}, amount=${order.totalPrice * 100})}">Pay with Razorpay</a>
+                    <span th:if="${order.status != 'Paid'}"> | </span>
+                    <a th:href="@{/admin/billing/restaurant/mark-paid/{id}(id=${order.id})}">Mark Paid</a>
+                </span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
+

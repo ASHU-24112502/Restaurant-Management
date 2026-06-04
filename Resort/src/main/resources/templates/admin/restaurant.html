@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Restaurant Orders</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="dashboard-body">
+<div class="sidebar">
+    <h2>Pariwar</h2>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/admin/menu">Menu</a>
+    <a href="/admin/billing/restaurant">Billing</a>
+</div>
+<div class="main-content">
+    <div class="topbar">
+        <h1>Restaurant Orders</h1>
+        <a href="/restaurant/order" class="add-btn">Order From Menu</a>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Customer</th>
+            <th>Food</th>
+            <th>Qty</th>
+            <th>Table</th>
+            <th>Status</th>
+            <th>Total</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.id}"></td>
+            <td th:text="${order.customerName}"></td>
+            <td th:text="${order.foodItem}"></td>
+            <td th:text="${order.quantity}"></td>
+            <td th:text="${order.tableNumber}"></td>
+            <td th:text="${order.status}"></td>
+            <td th:text="${order.totalPrice}"></td>
+            <td>
+                <a th:href="@{/admin/restaurant/delete/{id}(id=${order.id})}">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <title>Add Booking</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/style.css}">
+
+</head>
+
+<body class="dashboard-body">
+
+<div class="sidebar">
+
+    <h2>Pariwar</h2>
+
+    <a href="/dashboard">Dashboard</a>
+    <a href="/bookings">Bookings</a>
+    <a href="/rooms">Rooms</a>
+
+</div>
+
+<div class="main-content">
+
+    <div class="form-box">
+
+        <h1>Book Your Stay</h1>
+
+        <form th:action="@{/bookings/save}"
+              th:object="${booking}"
+              method="post">
+
+            <input type="text"
+                   th:field="*{customerName}"
+                   placeholder="Customer Name"
+                   required>
+
+            <select th:field="*{roomNumber}" required>
+                <option value="" disabled selected>Select Room</option>
+                <option th:each="room : ${rooms}"
+                        th:value="${room.roomNumber}"
+                        th:text="${room.roomNumber + ' - ' + room.roomType + ' ($' + room.price + ')'}">
+                </option>
+            </select>
+
+            <label>Check In Date</label>
+            <input type="date"
+                   th:field="*{checkInDate}"
+                   required>
+
+            <label>Check Out Date</label>
+            <input type="date"
+                   th:field="*{checkOutDate}"
+                   required>
+
+            <div th:if="${isAdmin or isWaiter}">
+                <select th:field="*{bookingStatus}">
+                    <option value="Pending">Pending</option>
+                    <option value="Confirmed">Confirmed</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+            </div>
+            <div th:if="${!(isAdmin or isWaiter)}">
+                <input type="hidden" th:field="*{bookingStatus}" value="Pending" />
+            </div>
+
+            <button type="submit">Confirm Booking</button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

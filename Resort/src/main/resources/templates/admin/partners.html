@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Partner Integrations</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="dashboard-body">
+<div class="sidebar">
+    <h2>Pariwar</h2>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/rooms">Rooms</a>
+    <a href="/admin/restaurant">Restaurant Orders</a>
+    <a href="/admin/menu">Menu</a>
+    <a href="/admin/users">Users</a>
+    <a href="/admin/partners">Partners</a>
+    <a href="/admin/billing/rooms">Room Billing</a>
+    <a href="/admin/billing/restaurant">Restaurant Billing</a>
+</div>
+<div class="main-content">
+    <div class="topbar">
+        <h1>Partner Integrations</h1>
+    </div>
+    <form th:action="@{/admin/partners/save}" th:object="${partner}" method="post" class="dashboard-card">
+        <div class="input-box">
+            <label>Partner Name</label>
+            <input type="text" th:field="*{partnerName}" required />
+        </div>
+        <div class="input-box">
+            <label>Partner URL</label>
+            <input type="text" th:field="*{partnerUrl}" placeholder="https://..." required />
+        </div>
+        <div class="input-box">
+            <label>Restaurant ID</label>
+            <input type="text" th:field="*{restaurantId}" placeholder="Swiggy/Zomato restaurant ID" required />
+        </div>
+        <button type="submit" class="dashboard-btn">Save Partner</button>
+    </form>
+
+    <div class="dashboard-card" style="margin-top:24px;">
+        <h2>Partner Integration API</h2>
+        <p>Use the partner REST API to connect delivery partner systems. Example endpoints:</p>
+        <ul>
+            <li><code>GET /api/partners?apiKey=YOUR_API_KEY</code> — list partner information for a valid partner key</li>
+            <li><code>GET /api/partners/me</code> — return your partner details using <code>X-API-KEY</code></li>
+            <li><code>POST /api/partners/pair</code> — register a new partner link</li>
+        </ul>
+        <p>Provide the generated <strong>API Key</strong> to partner apps so they can connect securely.</p>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>URL</th>
+            <th>Restaurant ID</th>
+            <th>API Key</th>
+            <th>Created</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="partner : ${partners}">
+            <td th:text="${partner.id}"></td>
+            <td th:text="${partner.partnerName}"></td>
+            <td><a th:href="${partner.partnerUrl}" target="_blank" th:text="${partner.partnerUrl}"></a></td>
+            <td th:text="${partner.restaurantId}"></td>
+            <td><code th:text="${partner.apiKey}"></code></td>
+            <td th:text="${partner.createdAt}"></td>
+            <td>
+                <a th:href="@{/admin/partners/generate-key/{id}(id=${partner.id})}">Regenerate Key</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
+

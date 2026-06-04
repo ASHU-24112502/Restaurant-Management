@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Razorpay Checkout</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body class="dashboard-body">
+<div class="sidebar">
+    <h2>Pariwar</h2>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/bookings">Bookings</a>
+    <a href="/services">Services</a>
+    <a href="/restaurant/order">Order Food</a>
+    <a href="/logout" class="logout-btn">Logout</a>
+</div>
+<div class="main-content">
+    <div class="topbar">
+        <h1>Complete Payment</h1>
+        <p>Pay securely with Razorpay and download your GST bill once payment is successful.</p>
+    </div>
+    <div class="dashboard-card">
+        <div class="row" style="display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;">
+            <div>
+                <h2 th:text="${amountDisplay}">₹0.00</h2>
+                <p>Type: <strong th:text="${type}">room</strong></p>
+                <p>Reference ID: <strong th:text="${refId != null ? refId : 'manual'}">manual</strong></p>
+                <p th:if="${testMode}">Test mode is enabled. Razorpay test key will be used.</p>
+            </div>
+            <div style="align-self:center;">
+                <p th:if="${#strings.isEmpty(razorpayKey)}" style="color:#b91c1c; margin-bottom:12px;">Razorpay key is not configured. Please set `razorpay.key` and `razorpay.secret` in `application.properties`.</p>
+                <button id="rzp-button" class="dashboard-btn" th:disabled="${#strings.isEmpty(razorpayKey)}">Pay with Razorpay</button>
+            </div>
+        </div>
+    </div>
+    <div class="dashboard-card" style="margin-top:20px;">
+        <p>After successful payment, you will be redirected to a GST bill page where you can download or print your receipt.</p>
+    </div>
+    <form id="verificationForm" action="/api/payment/verify" method="post" style="display:none;">
+        <input type="hidden" name="razorpay_order_id" id="razorpay_order_id" th:value="${orderId}" />
+        <input type="hidden" name="type" th:value="${type}" />
+        <input type="hidden" name="refId" th:value="${refId}" />
+        <input type="hidden" name="amount" th:value="${amount}" />
+        <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" />
+        <input type="hidden" name="razorpay_signature" id="razorpay_signature" />
+    </form>
+</div>
+<script th:inline="javascript">
+/*<![CDATA[*/
+    const razorpayKey = /*[[${razorpayKey}]]*/ '';
+    const orderId = /*[[${orderId}]]*/ 'order_test';
+    const amount = /*[[${amount}]]*/ 0;
+    const type = /*[[${type}]]*/ 'room';
+    const description = /*[[${description}]]*/ 'Payment';
+
+    document.getElementById('rzp-button').addEventListener('click', function (e) {
+        e.preventDefault();
+        if (!razorpayKey) {
+            alert('Razorpay key is missing. Please configure Razorpay keys in application properties.');
+            return;
+        }
+
+        const options = {
+            key: razorpayKey,
+            amount: amount,
+            currency: 'INR',
+            order_id: orderId,
+            name: 'Pariwar',
+            description: description,
+            handler: function (response) {
+                document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+                document.getElementById('razorpay_signature').value = response.razorpay_signature;
+                document.getElementById('verificationForm').submit();
+            },
+            prefill: {
+                name: 'Guest'
+            },
+            theme: {
+                color: '#2563eb'
+            }
+        };
+        const rzp = new Razorpay(options);
+        rzp.open();
+    });
+/*]]>*/
+</script>
+</body>
+</html>
+

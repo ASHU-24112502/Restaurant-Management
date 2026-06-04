@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>GST Bill</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .bill{
+            max-width:800px;margin:40px auto;padding:24px;background:white;border-radius:12px;box-shadow:0 10px 24px rgba(0,0,0,0.08)
+        }
+        .bill h2{margin-bottom:10px}
+        .bill .row{display:flex;justify-content:space-between;margin:10px 0}
+    </style>
+</head>
+<body>
+<div class="bill">
+    <h2>Tax Invoice (GST)</h2>
+    <div class="row"><div>Order</div><div th:text="${orderId}"></div></div>
+    <div class="row"><div>Guest</div><div th:text="${name}"></div></div>
+    <div class="row"><div>Type</div><div th:text="${type}"></div></div>
+    <hr/>
+    <div class="row"><div>Amount</div><div th:text="${amount}"></div></div>
+    <div class="row"><div>GST (18%)</div><div th:text="${gst}"></div></div>
+    <div class="row"><strong>Total</strong><strong th:text="${total}"></strong></div>
+    <hr/>
+    <p th:if="${paid}">Payment Status: <strong>Paid</strong></p>
+    <p th:if="${!paid}">Payment Status: <strong>Pending (test-mode)</strong></p>
+    <div style="margin-top:18px">
+        <button type="button" onclick="window.print()" class="dashboard-btn">Download / Print</button>
+        <a href="/dashboard" class="dashboard-btn" style="margin-left:8px;">Back</a>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
+

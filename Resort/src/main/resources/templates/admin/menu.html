@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Menu Management</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="dashboard-body">
+<div class="sidebar">
+    <h2>Pariwar</h2>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/rooms">Rooms</a>
+    <a href="/bookings">Bookings</a>
+    <a href="/admin/restaurant">Restaurant Orders</a>
+    <a href="/admin/menu">Menu</a>
+    <a href="/admin/billing/rooms">Billing</a>
+    <a href="/admin/billing/restaurant">Restaurant Billing</a>
+</div>
+<div class="main-content">
+    <div class="topbar">
+        <h1>Food Menu</h1>
+        <a href="/admin/menu/add" class="add-btn">Add Menu Item</a>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Item</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${items}">
+            <td th:text="${item.id}"></td>
+            <td>
+                <div class="menu-card-row">
+                    <img th:if="${item.imageUrl}" th:src="${item.imageUrl}" alt="Item image" />
+                    <span th:text="${item.itemName}"></span>
+                </div>
+            </td>
+            <td th:text="${item.description}"></td>
+            <td th:text="${item.price}"></td>
+            <td th:text="${item.status}"></td>
+            <td>
+                <a th:href="@{/admin/menu/edit/{id}(id=${item.id})}">Edit</a>
+                <a th:href="@{/admin/menu/delete/{id}(id=${item.id})}">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
+

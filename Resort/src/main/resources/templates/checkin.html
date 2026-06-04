@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <title>Check In</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body class="dashboard-body">
+
+<div class="sidebar">
+    <h2>Pariwar</h2>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/rooms">Rooms</a>
+    <a href="/bookings">Bookings</a>
+    <a href="/restaurant">Restaurant</a>
+    <a href="/checkin" sec:authorize="hasAnyRole('ADMIN','WAITER')">Check-In</a>
+    <a href="/services">Services</a>
+    <a href="/ai">AI Assistant</a>
+</div>
+
+<div class="main-content">
+    <div class="topbar">
+        <h1>Guest Check-In</h1>
+        <a href="/checkin/add" class="add-btn" th:if="${isAdmin or isWaiter}">Add Check-In</a>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Guest Name</th>
+                <th>Room Number</th>
+                <th>Check In Date</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="c : ${checkins}">
+                <td th:text="${c.id}"></td>
+                <td th:text="${c.guestName}"></td>
+                <td th:text="${c.roomNumber}"></td>
+                <td th:text="${c.checkInDate}"></td>
+                <td th:text="${c.status}"></td>
+                <td>
+                    <a th:href="@{/checkin/delete/{id}(id=${c.id})}" class="delete-btn" th:if="${isAdmin or isWaiter}">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

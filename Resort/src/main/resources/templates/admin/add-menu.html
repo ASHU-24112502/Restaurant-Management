@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Menu Item</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="dashboard-body">
+<div class="sidebar">
+    <h2>Pariwar</h2>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/admin/menu">Menu</a>
+    <a href="/admin/restaurant">Restaurant Orders</a>
+</div>
+<div class="main-content">
+    <div class="form-box">
+        <h1>Add / Edit Menu Item</h1>
+        <form th:action="@{/admin/menu/save}" th:object="${menuItem}" method="post" enctype="multipart/form-data">
+            <input type="hidden" th:field="*{id}" />
+            <input type="text" th:field="*{itemName}" placeholder="Food Item Name" required>
+            <input type="text" th:field="*{description}" placeholder="Description" required>
+            <input type="number" step="0.01" th:field="*{price}" placeholder="Price" required>
+            <input type="text" th:field="*{imageUrl}" placeholder="Image URL (optional)">
+            <input type="file" name="imageFile" accept="image/*">
+            <select th:field="*{status}">
+                <option value="Available">Available</option>
+                <option value="Unavailable">Unavailable</option>
+            </select>
+            <button type="submit">Save Menu Item</button>
+        </form>
+        <div th:if="${menuItem.imageUrl}" class="image-preview">
+            <p>Current Image Preview</p>
+            <img th:src="${menuItem.imageUrl}" alt="Menu Image" />
+        </div>
+    </div>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Room Billing</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="dashboard-body">
+<div class="sidebar">
+    <h2>Pariwar</h2>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/rooms">Rooms</a>
+    <a href="/admin/billing/rooms">Room Billing</a>
+    <a href="/admin/billing/restaurant">Restaurant Billing</a>
+</div>
+<div class="main-content">
+    <div class="topbar">
+        <h1>Room Billing</h1>
+    </div>
+    <div class="dashboard-card" style="margin-bottom:20px;">
+        <p>Admin and waiter actions:
+            <strong>Pay with Razorpay</strong> opens the checkout page for unpaid room bills,
+            and <strong>Mark Paid</strong> updates the room payment status immediately.
+        </p>
+    </div>
+    <div class="cards">
+        <div class="dashboard-card">
+            <h2 th:text="${totalRevenue}">0.0</h2>
+            <p>Total Room Revenue</p>
+        </div>
+        <div class="dashboard-card">
+            <h2 th:text="${paidCount}">0</h2>
+            <p>Paid Bookings</p>
+        </div>
+        <div class="dashboard-card">
+            <h2 th:text="${pendingCount}">0</h2>
+            <p>Pending Payments</p>
+        </div>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Customer</th>
+            <th>Room</th>
+            <th>Booking Status</th>
+            <th>Payment Status</th>
+            <th>Total</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="booking : ${bookings}">
+            <td th:text="${booking.id}"></td>
+            <td th:text="${booking.customerName}"></td>
+            <td th:text="${booking.roomNumber}"></td>
+            <td th:text="${booking.bookingStatus}"></td>
+            <td th:text="${booking.paymentStatus}"></td>
+            <td th:text="${booking.totalPrice}"></td>
+            <td>
+                <span th:if="${isAdmin or isWaiter}">
+                    <a th:if="${booking.paymentStatus != 'Paid'}" th:href="@{/payment/checkout(type='room', refId=${booking.id}, amount=${booking.totalPrice * 100})}">Pay with Razorpay</a>
+                    <span th:if="${booking.paymentStatus != 'Paid'}"> | </span>
+                    <a th:href="@{/admin/billing/rooms/mark-paid/{id}(id=${booking.id})}">Mark Paid</a>
+                </span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
+

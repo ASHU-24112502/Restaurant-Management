@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <title>Request Service</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/style.css}">
+
+</head>
+
+<body class="dashboard-body">
+
+<div class="sidebar">
+
+    <h2>Pariwar</h2>
+
+    <a href="/dashboard">Dashboard</a>
+    <a href="/rooms">Rooms</a>
+    <a href="/bookings">Bookings</a>
+    <a href="/restaurant">Restaurant</a>
+    <a href="/checkin" sec:authorize="hasAnyRole('ADMIN','WAITER')">Check-In</a>
+    <a href="/services">Services</a>
+    <a href="/ai">AI Assistant</a>
+
+</div>
+
+<div class="main-content">
+
+    <div class="form-box">
+
+        <h1>Service Request</h1>
+
+        <form th:action="@{/services/save}"
+              th:object="${serviceRequest}"
+              method="post">
+
+            <input type="text"
+                   th:field="*{customerName}"
+                   placeholder="Customer Name"
+                   required>
+
+            <input type="text"
+                   th:field="*{roomNumber}"
+                   placeholder="Room Number"
+                   required>
+
+            <select th:field="*{serviceType}">
+
+                <option value="Laundry">
+                    Laundry
+                </option>
+
+                <option value="Housekeeping">
+                    Housekeeping
+                </option>
+
+                <option value="Food Service">
+                    Food Service
+                </option>
+
+                <option value="Complaint">
+                    Complaint
+                </option>
+
+            </select>
+
+            <textarea th:field="*{description}"
+                      placeholder="Describe your request"
+                      rows="5"></textarea>
+
+            <select th:field="*{status}">
+
+                <option value="Pending">
+                    Pending
+                </option>
+
+                <option value="Processing">
+                    Processing
+                </option>
+
+                <option value="Completed">
+                    Completed
+                </option>
+
+            </select>
+
+            <button type="submit">
+                Submit Request
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

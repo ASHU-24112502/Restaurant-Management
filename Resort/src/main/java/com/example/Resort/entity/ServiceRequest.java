@@ -3,33 +3,35 @@ package com.example.Resort.entity;
 import jakarta.persistence.*;
 
 @Entity
-public class Room {
+public class ServiceRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String customerName;
+
     private String roomNumber;
 
-    private String roomType;
-
-    private Double price;
-
-    private String imageUrl;
+    private String serviceType;
 
     private String description;
 
     private String status;
 
-    public Room() {
+    public ServiceRequest() {
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
     public String getRoomNumber() {
@@ -40,28 +42,12 @@ public class Room {
         this.roomNumber = roomNumber;
     }
 
-    public String getRoomType() {
-        return roomType;
+    public String getServiceType() {
+        return serviceType;
     }
 
-    public void setRoomType(String roomType) {
-        this.roomType = roomType;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
     }
 
     public String getDescription() {

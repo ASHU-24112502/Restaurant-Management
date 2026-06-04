@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add User</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="dashboard-body">
+<div class="sidebar">
+    <h2>Pariwar</h2>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/rooms">Rooms</a>
+    <a href="/admin/restaurant">Restaurant Orders</a>
+    <a href="/admin/menu">Menu</a>
+    <a href="/admin/users">Users</a>
+    <a href="/admin/partners">Partners</a>
+    <a href="/admin/billing/rooms">Room Billing</a>
+    <a href="/admin/billing/restaurant">Restaurant Billing</a>
+</div>
+<div class="main-content">
+    <div class="topbar">
+        <h1>Add User</h1>
+    </div>
+    <form th:action="@{/admin/users/save}" th:object="${user}" method="post" class="dashboard-card">
+        <div class="input-box">
+            <label>Full Name</label>
+            <input type="text" th:field="*{fullName}" required />
+        </div>
+        <div class="input-box">
+            <label>Email</label>
+            <input type="email" th:field="*{email}" required />
+        </div>
+        <div class="input-box">
+            <label>Password</label>
+            <input type="password" th:field="*{password}" required />
+        </div>
+        <div class="input-box">
+            <label>Role</label>
+            <select th:field="*{role}">
+                <option value="ROLE_USER">Customer</option>
+                <option value="ROLE_WAITER">Waiter</option>
+                <option value="ROLE_ADMIN">Admin</option>
+            </select>
+        </div>
+        <button type="submit" class="dashboard-btn">Save User</button>
+    </form>
+</div>
+</body>
+</html>
+
